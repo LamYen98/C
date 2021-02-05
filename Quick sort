@@ -1,0 +1,75 @@
+#include<stdio.h>
+#include<iostream>
+using namespace std;
+
+void input(int a[], int n){
+	int i;
+	// thuc hien nhap tung phan tu mang
+	for(i=0; i<n;i++){
+		printf("Nhap a[%d] = ",i);
+		scanf("%d",&a[i]);
+	}
+}
+ 
+void output(int a[], int n){
+	int i;
+	for(i=0; i<n;i++){
+		printf("%d \t",a[i]);
+	}
+}
+
+void swap(int &x, int &y){
+	int temp;
+	temp=x;
+	x=y;
+	y=temp;
+}
+
+void Partition(int a[], int i,int j, int &k){
+	int l, p;
+	p=a[i];
+	l=i;
+	k=j+1;
+	do{
+		l=l+1;
+	} while ((a[l]<=p)&& (l<=j));
+	do{ k=k-1;} while (a[k]>p);
+	while(l<k){
+		swap(a[l],a[k]);
+		do{l=l+1;} while (a[l]<=p);
+		do{k=k-1;} while (a[k>p]);
+	}
+	swap(a[i],a[k]);
+}
+
+void QuickSort(int a[], int i, int j){
+	int k;
+	if(i<j){
+		Partition(a,i,j,k);
+		QuickSort(a,i,k-1);
+		QuickSort(a,k+1,j);
+	}
+}
+
+int main(void){
+	// khai bao mang a co n phan tu
+	int n;
+	printf("\n Nhap so n phan tu: ");
+	scanf("%d",&n);
+	int a[n];
+	input(a,n);
+	printf("\n Danh sach truuoc khi sap xep la: \n");
+	output(a,n);
+	QuickSort(a,0,n-1);
+	printf("\n Danh sach sau khi sap xep la: \n");
+	output(a,n);
+	printf("\n");
+	//system("pause");
+	return 0;
+}
+
+
+
+
+
+
