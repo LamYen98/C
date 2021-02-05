@@ -1,0 +1,185 @@
+#include <stdio.h>
+#include<malloc.h>
+#include<cstdlib>
+typedef  int KeyType;
+typedef struct Node{
+	KeyType Key;
+	Node* Left;
+	Node* Right;
+}Node;
+typedef Node* TTree;
+TTree T;// con tro chi cay nhi phan
+			/*khoi tao cay rong*/
+void MakeNULL_Tree(TTree *T){
+	(*T)=NULL;
+}
+			/*kt cây rong*/
+int Empty_Tree(TTree T){
+	return (T==NULL);
+}
+			/*xac dinh con trai*/
+TTree LeftChild(TTree n){
+	if(n!=NULL)
+	return n->Left;
+	else return NULL;
+}
+			/*	xac dinh con phai */
+TTree RightChild(TTree n){
+	if(n!=NULL)
+	return n->Right;
+	else return NULL;
+}
+			/* kt nut la*/
+int IsLeaf(TTree n){
+	if(n!=NULL)  //neu nut ko co con nao het
+	return ((LeftChild(n)==NULL)&& (RightChild(n)==NULL)); //thi ca trai va phai dieu rong=> nut dola nut la
+	else return 0; // nguoc lai no ko la nut la thi ko dc tinh them la 1
+}
+			/*xac dinh so nut la tren cay*/
+int NB_leaves(TTree T){
+	int leaves=0; //cho so la bat dau =0
+	if(!Empty_Tree(T))  //neu cay co nut
+		if(IsLeaf(T))   //neu tim thay nut la thi cu chay va cong don den khi het nut
+			leaves++;
+		else 	
+			leaves = NB_leaves(LeftChild(T))+NB_leaves(RightChild(T)); // nguoc lai la=tong la ben trai demdc va ben phai
+	return leaves;
+}
+			/* xac dinh so nut tren cây*/
+int NB_NODES(TTree T){
+	if(Empty_Tree(T))
+	return 0;
+	else return 1+NB_NODES(LeftChild(T))+NB_NODES(RightChild(T));
+}
+			/* tao cay moi tu 2 cay co san*/
+TTree Create2(KeyType v,TTree L,TTree R){
+	TTree N;
+	N=(Node*)malloc(sizeof(Node));
+	N->Key=v;
+	N->Left=L;
+	N->Right=R;
+	return N;	//N là o chu , gom 3 truong khoa gia tri, tro trai, tro phai, tao 1 o nho chua 3 truong goi N, cay N
+}
+			/*duyet tien tu NLR*/
+void PreOrder(TTree T)
+{
+	if(!Empty_Tree(T)){ // neu cay ko rong
+		printf("%d\t",T->Key); //in gia tri truong key , khai bao so nguyen nen %d
+		PreOrder(LeftChild(T));  // neu ko rong thi tra con trai ,phai
+		PreOrder(RightChild(T));	
+	}
+}
+			/* duyet trung tu LNR*/
+void InOrder(TTree T)
+{
+	if(!Empty_Tree(T)){ // neu cay ko rong
+		InOrder(LeftChild(T));  // neu ko rong thi tra con trai ,phai
+		printf("%d\t",T->Key); //in gia tri truong key , khai bao so nguyen nen %d
+		InOrder(RightChild(T));	
+	}
+}
+			/* duyet hau tu LRN */
+void PosOrder(TTree T)
+{
+	if(!Empty_Tree(T)){ // neu cay ko rong
+		PosOrder(LeftChild(T));  // neu ko rong thi tra con trai ,phai
+		PosOrder(RightChild(T));
+		printf("%d\t",T->Key); //in gia tri truong key , khai bao so nguyen nen %d	
+	}
+}
+			/* tim kienm 1 nut co khoa cho truoc tren cay TKNP*/
+TTree Search(KeyType x,TTree root){
+	if(root==NULL) return NULL;   // goc rong
+	else if(root->Key==x)   // nguoc lai neu goc la x tra ve goc
+			return root;
+		else if(root->Key < x)  // tim cay ben phai
+				return Search(x,root->Right);   //tra ve vi tri x ben phai
+			else   //tim tren cay ben phai
+				return Search(x,root->Left);   //tra ve vi tri x ben phai		
+}
+			/* them 1 nut co khoa cho truoc vao cay */
+void  Insert_Node(KeyType x,TTree *T){
+	if(Empty_Tree(*T)){				//neu goc rong
+		(*T) = (Node*)malloc(sizeof(Node));   // cap 1 o nho moi nhu goc
+	(*T)->Key=x;        // o nho có du 3 thanh phan
+	(*T)->Left=NULL;
+	(*T)->Right=NULL;
+	}
+		else if((*T)->Key==x)  // kt xem co x chua
+		printf("Da ton tai khoa %d\n",x);
+		else if(x<(*T)->Key) // nguoc lai neu x nho hon goc thi chen vao ben trai
+		Insert_Node(x, &(*T)->Left);
+		else if(x>(*T)->Key)		// nguoc lai neu x lon hon goc thi chen vao ben phai
+		Insert_Node(x, &(*T)->Right);
+}
+			/* xoa 1 nut co khoa nho nhat(nut cuc trai) dong thoi xoa nut nay */
+KeyType DeleteMin(TTree *T){
+	KeyType K;
+	if((*T)->Left==NULL){       //neu goc trai rong, k la goc, luc do goc se chay qua phai
+		K=(*T)->Key;
+		(*T)=(*T)->Right;
+		return K;
+	}
+	else   DeleteMin(&(*T)->Left);    // nguoc lai k nam ben trai va xoa no di
+	
+}
+			/* thu tuc xoa 1 nut co khoa cho truoc tren cay TKNP */
+void Delete_Node(KeyType X,TTree *T){
+	if(Empty_Tree(*T))		// neu rong
+			printf("Khong ton tai khoa %d \n", X);
+	else	
+		if(X<(*T)->Key) Delete_Node(X,&(*T)->Left);  // neu x nho hon goc thi tim ben trai va xoa
+		else if(X>(*T)->Key)		Delete_Node(X,&(*T)->Right);  //nguoc lai neu x lon hon goc thi tim ben phai va xoa
+			else
+				if(((*T)->Left==NULL)&&((*T)->Right==NULL))
+					(*T)=NULL;//nguoc lai neu ben trai phai goc dieu rong thi tra ve goc rong
+				else 
+					if((*T)->Left==NULL) (*T)=(*T)->Right;  // nguoc lai neu ben trai goc rong thi goc se tro ve ben phai
+					else if((*T)->Right==NULL)  (*T)=(*T)->Left;
+						else (*T)->Key=DeleteMin(&(*T)->Right);
+}
+			/* nhap cay */
+void Read_Tree(TTree *root){
+	int N;
+	KeyType X;
+	printf("Nhap so nut: ");
+	scanf("%d",&N);   fflush(stdin);
+	for(int i=1;i<=N;i++){
+		printf("\n");
+		printf("Nhap cac nut: ",i+1);
+		scanf("%d",&X);  fflush(stdin);
+		Insert_Node(X,root);
+	}
+	
+}
+			/* main chinh */
+main(){
+	TTree T;
+	KeyType X;
+	MakeNULL_Tree(&T);
+	Read_Tree(&T);
+	printf("\nDANH SACH DUYET TIEN TU: ");
+	PreOrder(T);
+	printf("\nDANH SACH DUYET TRUNG TU: ");
+	InOrder(T);
+	printf("\nDANH SACH DUYET HAU TU: ");
+	PosOrder(T);
+	printf("\nNhap X can xoa: ");
+	scanf("%d",&X);
+	Delete_Node(X,&T);
+	printf("\nDANH SACH DUYET TIEN TU: ");
+	PreOrder(T);
+	printf("\nDANH SACH DUYET TRUNG TU: ");
+	InOrder(T);
+	printf("\nDANH SACH DUYET HAU TU: ");
+	PosOrder(T);
+	/*========================tinh tong so nut, so nut la==============================*/
+	//int n;
+	printf("\n Tong so nut lá la: %d",NB_leaves(T));
+	//NB_NODES(T);
+	//IsLeaf(T);
+	//NB_leaves(T);
+	printf("\n Tong so nut là : %d",NB_NODES(T));
+	
+}	
+		
