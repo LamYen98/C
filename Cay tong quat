@@ -1,0 +1,143 @@
+#include <stdio.h>
+#include<malloc.h>
+#include<cstdlib>
+#define MaxLength 100
+#define NIL -1
+							/* CAY TONG QUAT BANG MANG*/
+typedef char DataType;
+typedef int Node;
+typedef struct {
+	/* luu tru nhan du lieu cac nut tren cay*/
+DataType Data[MaxLength];
+	/* luu tru cha cua cac nut tren cay*/
+Node Parent[MaxLength];
+	/* so nut thuc su trong cay*/
+int MaxNode; //NUT GOC LON NHAT
+}Tree;
+Tree T;
+			/* khoi tao cay rong*/
+void MakeNULL_Tree(Tree *T){
+	T->MaxNode=NIL;
+}
+			/*kt cây rong*/
+int Empty_Tree(Tree T){
+	return T.MaxNode==NIL;
+}
+			/*xác dinh nut cha cua nut tren cay*/
+Node Parent (Node n,Tree T){
+	if(Empty_Tree(T)||(n>T.MaxNode-1)||(n<0)) // RONG HOAC KO HOP LE(VI NHAN GOC CO GIA TRI BANG-1)THI KO TAO TRA VE RONG
+		return NIL;
+	else return T.Parent[n]; // NGUOC LAI TRA VE CHA
+}
+			/*xac dinh nhan cua nut tren cay*/
+DataType Label_Node(Node n,Tree T){
+	if(!Empty_Tree(T)&&(n>=0)&&(n<=T.MaxNode-1))
+		return T.Data[n];
+	//else return NIL;
+}
+			/* XAC DINH NUT GOC TRONG CAY*/
+Node root(Tree T){
+	if(!Empty_Tree(T))
+		return 0;
+	else return NIL;
+}
+			/* HAM XAC DINH CON TRAI NHAT CUA MOT NUT*/
+Node LestMost_Child(Node n, Tree T){
+	Node i;
+	//Node parent;
+	if(n<0) return NIL;
+	i=n+1;		/*vi tri bat dau duyet tim con cua nut n*/
+	while(i<=T.MaxNode-1)
+		if(T.Parent[i]==n ) return i;
+		else i=i+1;
+	return NIL;
+}
+			/*ham xac dinh anh em ruot phai cua nut*/
+Node Right_Sibling(Node n, Tree T){
+	Node i;
+	Node parent;
+	if(n<0)return NIL;
+	parent=T.Parent[n];
+	i=n+1;  // vi tri bat dau tim nut anh em ruot phai cua nut n
+	while (i<=T.MaxNode-1)
+		if(T.Parent[i]==parent ) return i;
+		else i=i+1;
+	return NIL;
+}
+			/* duyet tien tu*/
+void PreOrder(Node n, Tree T){
+	if(T.MaxNode!=NIL){  //nut lon nhat cua cay khac rong
+		printf("%c",Label_Node(n,T));
+		Node i=LestMost_Child(n,T);// i= con trai
+		while (i!=NIL){  // con trai khac rong
+			PreOrder(i,T);
+			i=Right_Sibling(i,T);
+		}
+	}
+}
+			/* duyet trung tu*/
+void InOrder(Node n, Tree T){
+		Node i=LestMost_Child(n,T);
+		if(i!=NIL)  
+			InOrder(i,T);
+			printf("%c",Label_Node(n,T));
+			i=Right_Sibling(i,T);
+			while (i!=NIL){
+				InOrder(i,T);
+				i=Right_Sibling(i,T);
+	}
+}
+			/*thu tuc duyet hau tu*/
+void PostOrder(Node n, Tree T){
+	Node i=LestMost_Child(n,T);
+	while (i!=NIL){
+			InOrder(i,T);
+			i=Right_Sibling(i,T);
+	}
+	printf("%c",Label_Node(n,T));
+}
+			/*nhap du lieu cho cay tu ban phim*/
+void ReadTree(Tree *T){
+	int i;
+	MakeNULL_Tree(T); 
+	//nhap so nut cua cay cho den khi so nut nhap vao la hop le
+	do{
+		printf("so nut cua cay la: ");
+		scanf("%d",&T->MaxNode);
+    }
+    while ((T->MaxNode<1)||(T->MaxNode>MaxLength));
+    printf("nhap nhan cua nut goc (keu nhan): ");
+    fflush(stdin);
+    scanf("%c",&T->Data[0]);
+    T->Parent[0]=NIL; // nut goc ko co cha
+    for(i=1;i<=T->MaxNode-1;i++){
+    	printf("\nnhap cha cua nut %d(so nguyen)",i);
+    	scanf("%d",&T->Parent[i]);
+    	printf("\nnhap nhan cua nut %d(kieu nhan)",i);
+    	fflush(stdin);
+    	scanf("%c",&T->Data[i]);
+    }
+}
+main(){
+	printf("DU LIEU CAY TONG QUAT\n");
+	ReadTree(&T);
+	printf("\nDANH SACH DUYET TIEN TU: ");
+	PreOrder(root(T),T);
+	printf("\nDANH SACH DUYET TRUNG TU: ");
+	InOrder(root(T),T);
+	printf("\nDANH SACH DUYET HAU TU: ");
+	PostOrder(root(T),T);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
