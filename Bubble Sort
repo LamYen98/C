@@ -1,0 +1,64 @@
+#include<stdio.h>
+#include<iostream>
+using namespace std;
+
+void input(int a[], int n){
+	int i;
+	// thuc hien nhap tung phan tu mang
+	for(i=0; i<n;i++){
+		printf("Nhap a[%d] = ",i);
+		scanf("%d",&a[i]);
+	}
+}
+ 
+void output(int a[], int n){
+	int i;
+	for(i=0; i<n;i++){
+		printf("%d \t",a[i]);
+	}
+}
+
+void swap(int &x, int &y){
+	int temp;
+	temp=x;
+	x=y;
+	y=temp;
+}
+
+void BubbleSort(int a[],int n){
+	for(int i=n-1; i>0; i--){
+		for(int j=0;j<i; j++){
+			if(a[j]>a[j+1]){
+				swap (a[j],a[j+1]);
+			}
+		}
+	}
+}
+
+int main(void){
+	// khai bao mang a co n phan tu
+	int n;
+	printf("\n Nhap so n phan tu: ");
+	scanf("%d",&n);
+	int a[n];
+	input(a, n);
+	printf("\n Danh sach truuoc khi sap xep la: \n");
+	output(a,n);
+	BubbleSort(a,n);
+	printf("\n Danh sach sau khi sap xep la: \n");
+	output(a,n);
+	printf("\n");
+	//system("pause");
+	return 0;
+}
+
+
+
+
+
+
+
+
+
+
+
