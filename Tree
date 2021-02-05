@@ -1,0 +1,60 @@
+#include"TreeTKNP.CPP"
+
+/* ==== HAM KHOI TAO CAY ==== */
+void nhap(TTree *T){
+	int N,k,i;
+	//N = *T;
+		printf("\nNhap vao so phan tu: ");
+		scanf("%d",&N);
+	for(i=1;i<=N;i++){
+		printf("Phan tu thu %d : ",i);
+		scanf("%d",&k);
+		InsertNode(k,T);
+	}
+}
+
+
+main(){
+	TTree T;
+	MakeNull_Tree(&T);
+	nhap(&T);
+	printf("DUYET TIEN TU: ");
+	NLR(T);
+	printf("\nDUYET TRUNG TU: ");
+	LNR(T);
+	printf("\nDUYET HAU TU: ");
+	LRN(T);
+	
+	printf("\n");
+	int x;
+	printf("Nhap vao x can them (So nguyen): "); scanf("%d",&x);
+	InsertNode(x,&T);
+	printf("DUYET TIEN TU: ");
+	NLR(T);
+	printf("\nDUYET TRUNG TU: ");
+	LNR(T);
+	printf("\nDUYET HAU TU: ");
+	LRN(T);
+	
+	printf("\n");
+	int Y;
+		printf("Nhap vao Y can tim kiem: "); scanf("%d",&Y);
+		//Node *p = ;
+		if(Search(Y,T) == NULL)
+		{
+			printf("\nKhong tim thay x trong cay",Y,Search(Y,T));
+		}
+		else{
+			printf("\nPhan tu x duoc tim co ton tai",Y,Search(Y,T));
+		}
+	printf("\n");
+	int f;
+	printf("\nNhap so F can xoa: "); scanf("%d",&f);
+	DeleteNode(f,&T);
+	printf("DUYET TIEN TU: ");
+	NLR(T);
+	printf("\nDUYET TRUNG TU: ");
+	LNR(T);
+	printf("\nDUYET HAU TU: ");
+	LRN(T);
+}
